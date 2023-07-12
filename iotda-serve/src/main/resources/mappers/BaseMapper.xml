@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.zrfiotda.mappers.BaseMapper">
+
+    <select id="selectCoverAll">
+        select * from covers
+        <trim prefix="WHERE" prefixOverrides="AND">
+            <if test="date != '' and date != null">
+                AND `date` LIKE concat('%', #{date}, '%')
+            </if>
+            <if test="coverStatus != '' and coverStatus != null">
+                AND `cover_status` = #{coverStatus}
+            </if>
+        </trim>
+    </select>
+
+    <select id="selectSmokeAll">
+        select *
+        from smokes
+        <trim prefix="WHERE" prefixOverrides="AND">
+            <if test="date != '' and date != null">
+                AND `date` LIKE concat('%', #{date}, '%')
+            </if>
+            <if test="beepStatus != '' and beepStatus != null">
+                AND `beep_status` = #{beepStatus}
+            </if>
+        </trim>
+    </select>
+
+    <select id="selectGtSmokeWarningCount">
+        select count(smoke_value) from smokes where smoke_value >= 200
+    </select>
+
+    <select id="selectGtSmokeNormalCount">
+        select count(smoke_value) from smokes where smoke_value &lt; 200
+    </select>
+
+    <select id="selectGtCoverWarningCount">
+        select count(accel_x) from covers where accel_x >= 10
+    </select>
+
+    <select id="selectGtCoverNormalCount">
+        select count(accel_x)
+        from covers
+        where accel_x &lt; 10
+    </select>
+
+    <select id="getRecentCover">
+        select accel_x from covers order by accel_x desc limit 10;
+    </select>
+
+    <select id="getRecentSmoke">
+        select smoke_value from smokes order by smoke_value desc limit 10;
+    </select>
+</mapper>
